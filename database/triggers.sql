@@ -67,7 +67,10 @@ INSERT OR UPDATE ON medidas_projeto FOR EACH ROW EXECUTE FUNCTION calcula_medida
 
 -- Calcula o total de fatores de caracteristicas gerais do sistema para
 -- atualizar o campo **gsc** da tabela pontos_funcao
-CREATE OR REPLACE FUNCTION calcula_gsc()
+-- ...
+-- Calcula o fator de ajuste da função para atualizar o campo **vaf**
+-- da tabela pontos_funcao
+CREATE OR REPLACE FUNCTION calcula_gsc_vaf()
  RETURNS trigger
  LANGUAGE plpgsql
 AS $function$
@@ -75,6 +78,7 @@ BEGIN
 	IF
 		pg_trigger_depth() < 2
 	THEN
+		-- GSC
 		UPDATE pontos_funcao
 		SET gsc = (
 			SELECT
@@ -96,10 +100,78 @@ BEGIN
 			WHERE NEW.id_projeto = pontos_funcao.id_projeto
 		)
 		WHERE id = NEW.id;
+		-- VAF
+		UPDATE pontos_funcao
+		SET vaf = ROUND(
+			(
+				SELECT 0.65 + (0.01 * gsc)
+				FROM pontos_funcao
+				WHERE id_projeto = NEW.id_projeto
+			)
+		, 2)
+		WHERE id_projeto = NEW.id_projeto;
 	END IF;
 	RETURN NEW;
 END;
 $function$;
 
-CREATE TRIGGER calcula_gsc AFTER
-INSERT OR UPDATE ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_gsc();
+CREATE TRIGGER calcula_gsc_vaf AFTER
+UPDATE ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_gsc_vaf();
+
+-- Calcula os pontos de função não ajustados para atualizar o campo
+-- **ufp** da tabela pontos_funcao
+CREATE OR REPLACE FUNCTION calcula_ufp()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	IF
+		pg_trigger_depth() < 2
+	THEN
+		UPDATE pontos_funcao
+		SET ufp = (
+			SELECT
+				sum(arquivo_logico_interno) +
+				sum(arquivo_interface_externa) +
+				sum(entradas_externas) +
+				sum(saidas_externas) +
+				sum(consultas_externas)
+			FROM pontos_funcao_n_ajustados
+			WHERE id_projeto = NEW.id_projeto
+		)
+		WHERE id_projeto = NEW.id_projeto;
+	END IF;
+	RETURN NEW;
+END;
+$function$;
+
+-- Calcula os pontos de função ajustados para atualizar o campo
+-- **afp** da tabela pontos_funcao
+CREATE TRIGGER calcula_ufp AFTER
+UPDATE OR INSERT ON pontos_funcao_n_ajustados FOR EACH ROW EXECUTE FUNCTION calcula_ufp();
+
+CREATE OR REPLACE FUNCTION calcula_afp()
+ RETURNS trigger
+ LANGUAGE plpgsql
+AS $function$
+BEGIN
+	IF
+		pg_trigger_depth() < 2
+	THEN
+		UPDATE pontos_funcao
+		SET afp = (
+			SELECT ufp * vaf
+			FROM pontos_funcao
+			WHERE id_projeto = NEW.id_projeto
+		)
+		WHERE id_projeto = NEW.id_projeto;
+	END IF;
+	RETURN NEW;
+END;
+$function$;
+
+CREATE TRIGGER calcula_afp AFTER
+UPDATE ON pontos_funcao_n_ajustados FOR EACH ROW EXECUTE FUNCTION calcula_afp();
+
+CREATE TRIGGER calcula_afp AFTER
+UPDATE ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_afp();
