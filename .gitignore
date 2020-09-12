@@ -1,3 +1,7 @@
 __pycache__
 environ.py
 .idea
+aws-cert.crt
+client.crt
+client.key
+heroku-client.py
