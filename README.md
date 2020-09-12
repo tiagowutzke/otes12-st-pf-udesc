@@ -79,6 +79,70 @@ Após isso, basta multiplicar o UFP com o VAF obtido:
 AFP = UFP x VAF
 ```
 
+#### Métricas de teste ágil e de apoio ao teste unitário
+
+- ##### Fator de teste
+
+Evidencia o esforço de uma equipe na criação de testes de unidade, comparando-se com a quantidade de código produzido. 
+
+Como base de medição, o fator de teste `Ti` para iteração `i` é calculado como a razão entre o número de linhas de código de teste e o número de linhas de código de produção, conforme fórmula abaixo:
+
+![fator de teste](./static/images/fator_teste.svg)
+
+Onde:
+
+**T LOTi** = número total de linhas de código de teste na iteração `i`;
+
+**T LOCi** = número total de linhas de código de produção na iteração `i`.
+
+- ##### Quantidade de casos de Teste e Assertivas
+
+A quantidade de casos de teste e assertivas fornece instrumentos para que a equipe de desenvolvimento verifique a 
+evolução dos testes de unidade automatizados. Base de medição:
+
+![assertiva1](./static/images/assertiva1.svg) e ![assertiva2](./static/images/assertiva2.svg) 
+
+Onde:
+
+**T CTi** = número total de casos de teste na iteração `i`;
+
+**T Ai** = número total de assertivas na iteração `i`;
+
+**T LOCi** = número total de linhas de código de produção na iteração `i`.
+
+- ##### Porcentagem de Assertivas de Teste de Unidade Passando e Falhando
+
+Tem como objetivo verificar a porcentagem de assertivas dos casos de teste de unidade/integração que estão passando ou 
+falhando. A base de medição será dada por:
+
+![assertiva_passando](./static/images/assertiva_passando.svg) ou ![assertiva_falhando](./static/images/assertiva_falhando.svg) 
+
+- ##### Quantidade de Testes de Aceitação por Funcionalidades
+
+A quantidade de testes de aceitação por funcionalidades tem como objetivo acompanhar a evolução da quantidade de testes 
+de aceitação produzidos. 
+
+Para base de medição, cada requisito representado por meio de história no XP e por meio do backlog no Scrum, são 
+quebrados em tarefas que devem ser realizadas durante a iteração. Cada tarefa pode ter um ou mais casos de teste de 
+aceitação que devem avaliar quando aquela tarefa estará pronta. Sua fórmula é:
+
+![aceitacao](./static/images/aceitacao.svg)
+
+Onde:
+
+**TTAi** = número de casos de teste de aceitação na iteração `i`;
+
+**TCTi** = total de casos de teste de aceitação na iteração `i`;
+
+**TCTi-1** = total de casos de teste de aceitação na iteração anterior (`i`-1).
+
+- ##### Porcentagem de Assertivas de Teste de Aceitação Passando e Falhando
+
+Tem como objetivo verificar qual a porcentagem de assertivas dos testes de aceitação que estão passando ou falhando. 
+A medição será dada por:
+
+![aceitacao_passando](./static/images/aceitacao_passando.svg) ou ![aceitacao_falhando](./static/images/aceitacao_falhando.svg)
+
 
 ## ESPECIFICAÇÕES TÉCNICAS
 
