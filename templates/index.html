@@ -1,0 +1,63 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<style>
+    #index-title{
+        width:100%;
+        text-align: center;
+        background-image: url('{{ url_for('static', filename='images/nasa.png') }}');
+        height: 21em;
+        margin-bottom: 2%;
+    }
+
+    #index-title h1{
+        color: white;
+        font-size: 5em;
+        padding-top: 3%;
+    }
+</style>
+
+<body>
+
+<script>
+setTimeout(function(){
+  document.getElementById("intro-video").play();
+}, 3000);
+</script>
+
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+                    <div id="index-title">
+                        <h1 style="">{{ title }}</h1>
+                    </div>
+                    <video width="100%" id="intro-video" controls="controls" src="/static/intro.mp4"></video><br><br>
+                    <p>
+                        Sua missão é de numerar esses itens em termos de sua importância para alcançar o ponto de encontro. Em
+                        seguida, você irá comparar a sua lista com a lista de sua equipe para então gerar a sua pontuação
+                        do desafio, comparando ambas as listas com um gabarito oficial da Nasa.
+                    </p><br>
+                    <p>
+                        A lista dos itens é a seguinte:<br><br>
+
+                        <ul>
+                            {% for id, item in items: %}
+                            <li>- {{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </p>
+                    <br>
+                    <button type="submit" style="border-width:3px;" class="btn btn-outline-info">
+                        <a style="color:unset" href="{{ route }}">INICIAR DESAFIO!</a>
+                    </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
+{% endblock %}
