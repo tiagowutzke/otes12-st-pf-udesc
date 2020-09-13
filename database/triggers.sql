@@ -9,7 +9,13 @@ AS $function$
 DECLARE
 	tabela varchar;
 	tabelas_array varchar[] := array[
-		'pontos_funcao',
+		'metricas',
+		'fator_teste',
+		'caso_teste_assertiva',
+		'porcentagem_assertivas',
+		'aceitacao_funcionalidades',
+		'porcentagem_assertivas_aceitacao',
+	  'pontos_funcao',
 		'medidas_projeto'
 	];
 BEGIN
@@ -50,18 +56,24 @@ BEGIN
 		SET metrica = ROUND(
 			(
 				SELECT (data_real_termino - data_planejada_termino)::numeric * 100 / (data_planejada_termino - data_real_inicio)
-				FROM medidas_projeto mp
+				FROM medidas_projeto
 				WHERE id = NEW.id
 			)
 		, 2)
 		WHERE id = NEW.id;
+		UPDATE metricas
+		SET medidas_projeto = ROUND(
+			(
+				SELECT (data_real_termino - data_planejada_termino)::numeric * 100 / (data_planejada_termino - data_real_inicio)
+				FROM medidas_projeto
+				WHERE id = NEW.id
+			)
+		, 2)
+		WHERE id_projeto = NEW.id_projeto;
 	END IF;
 	RETURN NEW;
 END;
 $function$;
-
-CREATE TRIGGER calcula_medidas_projeto AFTER
-INSERT OR UPDATE ON medidas_projeto FOR EACH ROW EXECUTE FUNCTION calcula_medidas_projeto();
 
 -- ** PONTOS POR FUNÇÃO **
 
@@ -165,6 +177,13 @@ BEGIN
 			WHERE id_projeto = NEW.id_projeto
 		)
 		WHERE id_projeto = NEW.id_projeto;
+		UPDATE metricas
+		SET pontos_funcao = (
+			SELECT ufp * vaf
+			FROM pontos_funcao
+			WHERE id_projeto = NEW.id_projeto
+		)
+		WHERE id_projeto = NEW.id_projeto;
 	END IF;
 	RETURN NEW;
 END;
@@ -175,3 +194,4 @@ UPDATE ON pontos_funcao_n_ajustados FOR EACH ROW EXECUTE FUNCTION calcula_afp();
 
 CREATE TRIGGER calcula_afp AFTER
 UPDATE ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_afp();
+
