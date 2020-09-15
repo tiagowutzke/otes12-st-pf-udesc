@@ -189,9 +189,9 @@ BEGIN
 END;
 $function$;
 
-CREATE TRIGGER calcula_afp AFTER
+CREATE TRIGGER a_calcula_afp AFTER
 UPDATE ON pontos_funcao_n_ajustados FOR EACH ROW EXECUTE FUNCTION calcula_afp();
 
-CREATE TRIGGER calcula_afp AFTER
+CREATE TRIGGER b_calcula_afp AFTER
 UPDATE ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_afp();
 
