@@ -1,0 +1,59 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+				<div style="margin-bottom: 5%;" id="index-title">
+					<h2 style="">Características gerais do sistema</h2>
+				</div>
+				<form id="up-file-form" onsubmit="/">
+				  	Projeto:<br>
+					<select class="custom-select models sm3x-size-field" id="projects">
+                    {% for id, value in rows: %}
+						<option value="{{ id }}">{{ value }}</option>
+					{% endfor %}
+                	</select><br><br>
+					Comunicação de dados:
+					<input type="number" id="data_comunication" name="data_comunication" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Processamento de dados distríbuidos:
+					<input type="number" id="data_distribution" name="data_distribution" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Performance:
+					<input type="number" id="performance" name="performance" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Uso do sistema:
+					<input type="number" id="system_use" name="system_use" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Taxa de transações:
+					<input type="number" id="transaction_rate" name="transaction_rate" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Entrada de dados online:
+					<input type="number" id="online_data_in" name="online_data_in" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Eficiência usuário final:
+					<input type="number" id="user_efficiency" name="user_efficiency" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Atualização online:
+					<input type="number" id="online_update" name="online_update" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Processamento complexo:
+					<input type="number" id="complex_processing" name="complex_processing" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Reusabilidade:
+					<input type="number" id="reusability" name="reusability" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Facilidade na instalação:
+					<input type="number" id="set_up_difficult" name="set_up_difficult" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Facilidade na operação:
+					<input type="number" id="operation_difficult" name="operation_difficult" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Multiplos locais:
+					<input type="number" id="multiple_locals" name="multiple_locals" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Facilidade mudança:
+					<input type="number" id="change_difficult" name="change_difficult" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					<button id="btn-submit" type="button" onclick="call_broker_system_general_features()" style="border-width:3px;width: 25%;" class="btn btn-outline-info">
+                        <a id="btn-text" style="color:unset">SALVAR</a>
+						<a id="divMsg" style="width: 2%; margin-left: 1%; display:none;">
+    						<img style="width: 35px;padding-right: 0.5em;" src="{{ url_for('static', filename='images/loading.gif') }}" alt="Please wait.." />
+						</a>
+                    </button>
+				</form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

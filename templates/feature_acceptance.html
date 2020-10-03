@@ -1,0 +1,27 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+				<div style="margin-bottom: 5%;" id="index-title">
+					<h2 style="">Novo projeto</h2>
+				</div>
+				<form id="up-file-form" onsubmit="/">
+					Nome do projeto:
+					<input type="text" id="validacao" name="validacao" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					<button id="btn-submit" type="button" onclick="call_broker_project()" style="border-width:3px;width: 25%;" class="btn btn-outline-info">
+                        <a id="btn-text" style="color:unset">SALVAR</a>
+						<a id="divMsg" style="width: 2%; margin-left: 1%; display:none;">
+    						<img style="width: 35px;padding-right: 0.5em;" src="{{ url_for('static', filename='images/loading.gif') }}" alt="Please wait.." />
+						</a>
+                    </button>
+				</form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -160,3 +160,360 @@ A medição será dada por:
 
 **Postgres**
 - Persistência dos dados 
+
+### APIs
+
+---
+#### Projetos 
+
+##### GET
+Backup de todos os projetos cadastrados
+
+**Payload:** 
+- `microservice`: "project"
+
+```shell script
+curl -X GET -d '{"microservice": "project"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+Insere novo registro de projeto
+
+**Payload:** 
+- `microservice`: "project"
+- `payload`: 
+```json 
+{
+    "description": <descricao do projeto (string)>
+}
+```
+
+
+```shell script
+curl -X PUT -d '{"microservice": "project", "payload": {"description": "Teste"}}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### DELETE
+Remove um registro de projeto
+
+**Payload:** 
+- `microservice`: "project"
+- `payload`: {"id": id_do_projeto}
+
+Onde `id_do_projeto` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "project", "payload": {"id": 9}}' localhost:8000/broker
+```
+---
+#### Assertivas - Caso de teste 
+
+##### GET
+Backup de todas as assertivas registradas
+
+**Payload:** 
+- `microservice`: "assertive_case_test"
+
+```shell script
+curl -X GET -d '{"microservice": "assertive_case_test"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+Insere novo registro de assertiva caso de teste 
+
+**Payload:** 
+- `microservice`: "assertive_case_test"
+- `payload`: 
+```json 
+{
+    "total_test_cases": <total de caso de testes (int)>,
+    "total_assertives": <total de assertivas (int)>,
+    "test_cases_quantity": <total de quantidade de casos de teste (int)>,
+    "assertives": <total de assetivas (int)>,
+    "project_id": <id do projeto relacionado às metricas (int)>,
+}
+```
+
+##### DELETE
+Remove um registro de assertiva caso de teste 
+
+**Payload:** 
+- `microservice`: "assertive_case_test"
+- `payload`: {"id": id_do_registro}
+
+Onde `id_do_registro` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "assertive_case_test", "payload": {"id": 9}}' localhost:8000/broker
+```
+
+---
+#### Percentual de assertivas 
+
+##### GET
+Backup de todos os registros de percentual de assertivas
+
+**Payload:** 
+- `microservice`: "assertives_percentage"
+
+```shell script
+curl -X GET -d '{"microservice": "assertives_percentage"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+Insere novo registro de percentual de assertivas 
+
+**Payload:** 
+- `microservice`: "assertives_percentage"
+- `payload`: 
+```json 
+{
+    "pass_assertives": <total de assertivas passando (int)>,
+    "fail_assertives": <total de assertivas falhando (int)>,
+    "project_id": <id do projeto relacionado às metricas (int)>,
+}
+```
+
+##### DELETE
+Remove um registro de percentual de assertivas 
+
+**Payload:** 
+- `microservice`: "assertives_percentage"
+- `payload`: {"id": id_do_registro}
+
+Onde `id_do_projeto` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "assertives_percentage", "payload": {"id": 9}}' localhost:8000/broker
+```
+---
+#### Aceitação de funcionalidades 
+
+##### GET
+Backup de todos os registros de aceitação de funcionalidades
+
+**Payload:** 
+- `microservice`: "feature_acceptance"
+
+```shell script
+curl -X GET -d '{"microservice": "feature_acceptance"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+Insere novo registro de aceitação de funcionalidades 
+
+**Payload:** 
+- `microservice`: "feature_acceptance"
+- `payload`: 
+```json 
+{
+    "test_cases": <total de casos de teste (int)>,
+    "prev_test_cases": <total de caso de teste anterior (int)>,
+    "acceptance_cases": <numero de casos de aceitação (int)>,
+    "project_id": <id do projeto relacionado às metricas (int)>,
+}
+```
+
+##### DELETE
+Remove um registro de percentual de assertivas 
+
+**Payload:** 
+- `microservice`: "feature_acceptance"
+- `payload`: {"id": id_do_registro}
+
+Onde `id_do_registro` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "feature_acceptance", "payload": {"id": 9}}' localhost:8000/broker
+```
+
+---
+#### Pontos por função 
+
+##### GET
+Backup de todos os registros de pontos por função
+
+**Payload:** 
+- `microservice`: "function_points"
+
+```shell script
+curl -X GET -d '{"microservice": "function_points"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+_Não possui este método, pois essa métrica é resultado de outros dados._
+
+
+##### DELETE
+Remove um registro de percentual de assertivas 
+
+**Payload:** 
+- `microservice`: "function_points"
+- `payload`: {"id": id_do_registro}
+
+Onde `id_do_registro` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "function_points", "payload": {"id": 9}}' localhost:8000/broker
+```
+
+---
+#### Medidas de projeto 
+
+##### GET
+Backup de todos os registros de medidas de projeto
+
+**Payload:** 
+- `microservice`: "project_measure"
+
+```shell script
+curl -X GET -d '{"microservice": "project_measure"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+Insere novo registro de medidas de projeto 
+
+**Payload:** 
+- `microservice`: "project_measure"
+- `payload`: 
+```json 
+{
+    "real_date_finish": <data real de término (date)>,
+    "plan_date_finish": <data planejada de término (date)>,
+    "real_date_begin": <data real de início (date)>,
+    "project_id": <id do projeto relacionado às metricas (int)>,
+}
+```
+
+
+##### DELETE
+Remove um registro de medidas de projeto 
+
+**Payload:** 
+- `microservice`: "project_measure"
+- `payload`: {"id": id_do_registro}
+
+Onde `id_do_registro` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "project_measure", "payload": {"id": 9}}' localhost:8000/broker
+```
+
+---
+#### Caracteristicas gerais do sistema 
+
+##### GET
+Backup de todos os registros de características gerais do sistema
+
+**Payload:** 
+- `microservice`: "system_general_features"
+
+```shell script
+curl -X GET -d '{"microservice": "system_general_features"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+Insere novo registro de características gerais do sistema 
+
+**Payload:** 
+- `microservice`: "system_general_features"
+- `payload`: 
+```json 
+{
+    "real_date_finish": <data real de término (date)>,
+    "plan_date_finish": <data planejada de término (date)>,
+    "real_date_begin": <data real de início (date)>,
+    "project_id": <id do projeto relacionado às metricas (int)>,
+}
+```
+
+
+##### DELETE
+Remove um registro de características gerais do sistema 
+
+**Payload:** 
+- `microservice`: "system_general_features"
+- `payload`: {"id": id_do_registro}
+
+Onde `id_do_registro` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "system_general_features", "payload": {"id": 9}}' localhost:8000/broker
+```
+---
+#### Fator de teste 
+
+##### GET
+Backup de todos os registros de fator de teste
+
+**Payload:** 
+- `microservice`: "test_factor"
+
+```shell script
+curl -X GET -d '{"microservice": "test_factor"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+Insere novo registro de fator de teste 
+
+**Payload:** 
+- `microservice`: "test_factor"
+- `payload`: 
+```json 
+{
+    "total_lines_test": <total de linhas de teste (date)>,
+    "total_lines_prod": <total de linhas de produção (date)>,
+    "project_id": <id do projeto relacionado às metricas (int)>,
+}
+```
+
+
+##### DELETE
+Remove um registro de fator de teste 
+
+**Payload:** 
+- `microservice`: "test_factor"
+- `payload`: {"id": id_do_registro}
+
+Onde `id_do_registro` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "test_factor", "payload": {"id": 9}}' localhost:8000/broker
+```
+
+---
+#### Pontos de função não ajustados 
+
+##### GET
+Backup de todos os registros de pontos de função não ajustados
+
+**Payload:** 
+- `microservice`: "unadjusted_function_points"
+
+```shell script
+curl -X GET -d '{"microservice": "unadjusted_function_points"}' https://otes12-st-tiagowutzke.herokuapp.com/broker
+```
+
+##### PUT
+Insere novo registro de de pontos de função não ajustados 
+
+**Payload:** 
+- `microservice`: "unadjusted_function_points"
+- `payload`: 
+```json 
+{
+    "complex": <complexidade (date)>,
+    "internal_logic_file": <arquivo interno lógico (date)>,
+    "external_interface_file": <arquivo de interface externa (int)>,
+    "external_inputs": <entradas externas (int)>,
+    "external_outputs": <saidas externas (int)>,
+    "external_queries": <consultas externas (int)>,
+    "project_id": <id do projeto (int)>,
+}
+```
+
+
+##### DELETE
+Remove um registro de fator de teste 
+
+**Payload:** 
+- `microservice`: "unadjusted_function_points"
+- `payload`: {"id": id_do_registro}
+
+Onde `id_do_registro` é um número inteiro
+```shell script
+ curl -X DELETE -d '{"microservice": "unadjusted_function_points", "payload": {"id": 9}}' localhost:8000/broker
+```
+

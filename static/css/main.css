@@ -306,3 +306,8 @@ tbody tr:hover {
     padding-right: 15px;
   }
 }
+
+.index-buttons {
+    width: 27em;
+    border-width: 2px;
+}

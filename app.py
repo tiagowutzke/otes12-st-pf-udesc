@@ -1,217 +1,96 @@
 import os
-import uuid
 
-from flask import Flask, render_template, request
+from flask import Flask, request, jsonify, render_template
 
-from process import insert_orders, calculate_score, api_insert_orders
-
+from tdd.test import Test
+from broker.broker import Broker
 from database.database_adapter import DatabaseAdapter
 
 app = Flask(__name__)
+app.config['JSON_AS_ASCII'] = False
 
-# Database interface
-adapter = DatabaseAdapter()
+# pages
+index = '/'
+index_test = '/test'
+new_project = '/new-project'
+test_factor = '/test-factor'
+general_system_features = '/general-system-features'
 
-# routes
-index_route = "/"
-single_route = "/single"
-team_route = "/team"
-post_single_route = "/post-single"
-post_team_route = "/post-team"
-score_route = "/score"
-
-# api routes
-api_get_session_id = "/api/get-session"
-api_get_items = "/api/get-items"
-api_post_single = "/api/post-single"
-api_post_team = "/api/post-team"
-api_score_route = "/api/score"
-
-session_id = str(uuid.uuid4())
+# broker pattern
+broker_route = "/broker"
 
 
-@app.route(index_route)
-def index():
-    items = adapter.select_all('items', 'id', 'description')
-    return render_template('index.html', title='Desafio da Nasa', items=items, route=single_route)
+@app.route(index)
+def index_function():
+    return render_template('index.html')
 
 
-@app.route(single_route)
-def single():
-    items = adapter.select_all('items', 'id', 'description')
-    return render_template('items.html', title='Teste individual', items=items, route=post_single_route)
+@app.route(index_test)
+def index_test_function():
+    return render_template('index_test.html')
 
 
-@app.route(team_route)
-def team():
-    items = adapter.select_all('items', 'id', 'description')
-    return render_template('items.html', title='Teste da equipe', items=items, route=post_team_route)
+@app.route(new_project)
+def new_project_function():
+    return render_template('new_project.html')
 
 
-@app.route(post_single_route, methods=['POST'])
-def post_single():
-    table_rows = len(request.form) // 2
+@app.route(test_factor)
+def test_factor_function():
+    return render_template('test_factor.html')
 
-    error_msg = {
-        'title': 'Erro ao salvar!',
-        'message': 'Por favor, tente novamente',
-        'html_class': 'error',
-        'message_button': 'TENTE NOVAMENTE',
-        'route': single_route
-    }
-    success_msg = {
-        'title': 'Sucesso!',
-        'message': 'Ordem dos itens individuais salvo com sucesso!',
-        'html_class': 'success',
-        'message_button': 'CONTINUE PARA TESTE DE EQUIPE',
-        'route': team_route
-    }
 
-    msg_template = insert_orders(
-        request=request,
-        session_id=session_id,
-        persistance=adapter.persistence,
-        table='single_orders',
-        table_rows=table_rows,
-        error_msg=error_msg,
-        success_msg=success_msg
+@app.route(general_system_features)
+def general_system_features_function():
+    database = DatabaseAdapter()
+    result, projects = database.select_all('projetos', '*')
+    database.close()
+    return render_template('general_system_features.html', rows=projects)
+
+
+@app.route(broker_route, methods=['GET', 'PUT', 'DELETE'])
+def broker_function():
+    payload = request.get_json(force=True)
+
+    response = Broker(
+        request_type=request.method,
+        microservice=payload.get('microservice'),
+        payload=payload.get('payload')
+    ).broker_services()
+
+    return jsonify(response)
+
+
+@app.route('/tdd')
+def tdd_function():
+    payload = request.get_json(force=True)
+
+    tdd = Test().test_medidas_projeto(
+        real_finish=payload.get('real_finish'),
+        plan_finish=payload.get('plan_finish'),
+        real_begin=payload.get('real_begin'),
+        expected=payload.get('expected'),
     )
 
-    return render_template('message.html',
-                           title=msg_template['title'],
-                           message=msg_template['message'],
-                           alert_class=msg_template['html_class'],
-                           message_button=msg_template['message_button'],
-                           route=msg_template['route']
-                           )
+    return jsonify(tdd)
 
 
-@app.route(post_team_route, methods=['POST'])
-def post_team():
-    table_rows = len(request.form) // 2
+@app.route('/tdd-test-factor?<payload>', methods=['GET'])
+def tdd_test_factor_function():
+    payload = request.get_json(force=True)
 
-    error_msg = {
-        'title': 'Erro ao salvar!',
-        'message': 'Por favor, tente novamente',
-        'html_class': 'error',
-        'message_button': 'TENTE NOVAMENTE',
-        'route': team_route
-    }
-    success_msg = {
-        'title': 'Sucesso!',
-        'message': 'Ordem dos itens de equipe salvo com sucesso!',
-        'html_class': 'success',
-        'message_button': 'VEJA SUA PONTUAÇÃO',
-        'route': score_route
-    }
-
-    msg_template = insert_orders(
-        request=request,
-        session_id=session_id,
-        persistance=adapter.persistence,
-        table='team_orders',
-        table_rows=table_rows,
-        error_msg=error_msg,
-        success_msg=success_msg
+    tdd = Test().test_fator_teste(
+        linhas_teste=payload.get('test_lines'),
+        linhas_prod=payload.get('test_prod'),
+        expected=payload.get('expected')
     )
-
-    return render_template('message.html',
-                           title=msg_template['title'],
-                           message=msg_template['message'],
-                           alert_class=msg_template['html_class'],
-                           message_button=msg_template['message_button'],
-                           route=msg_template['route']
-                           )
-
-
-@app.route(score_route)
-def score():
-    score = calculate_score(adapter.query, session_id)
-
-    template = {
-        'title': 'Sua pontuação é...',
-        'message': score,
-        'html_class': 'success',
-        'message_button': 'INICIO',
-        'route': '/',
-        'style': 'block'
-    }
-
-    return render_template('message.html',
-                           title=template['title'],
-                           message=template['message'],
-                           alert_class=template['html_class'],
-                           message_button=template['message_button'],
-                           route=template['route'],
-                           style=template['style'],
-                           session_id=session_id
-                           )
-
-
-@app.route(api_get_session_id)
-def api_get_session_id():
-    return str(uuid.uuid4())
-
-
-@app.route(api_get_items)
-def api_get_items():
-    return {
-        "code": 200,
-        "items":
-        adapter.select_all('items', 'id', 'description')
-    }
-
-
-@app.route(api_post_single, methods=['POST'])
-def api_post_single(table='single_orders'):
-    if request.method == 'POST':
-        try:
-            data = request.get_json()
-
-            response = api_insert_orders(
-                adapter.persistence,
-                session_id=data['session'],
-                request=data['orders'],
-                table=table
-            )
-
-            return response
-        except Exception as e:
-            return f"{{\n\tcode: 400\n\tmessage: error on request\n\tError details:\n\t{e}}}"
-
-
-@app.route(api_post_team, methods=['POST'])
-def api_post_team():
-    return api_post_single('team_orders')
-
-
-@app.route(api_score_route, methods=['GET'])
-def api_score():
-    try:
-        if request.method == 'GET':
-            data = request.get_json()
-
-            score = calculate_score(adapter.query, data['session'])
-
-            return f"{{\n\t'code': 200,\n\t'message': 'success',\n\t'response': {{\n\t\t'score': {score} \n\t}}\n}}"
-    except Exception as e:
-        return f"{{\n\t'code': 500,\n\t'message': 'error on request',\n\t'response': {{\n\t\t'message': {e} \n\t}}\n}}"
-
-
-@app.route('/teste')
-def teste():
-    subject = request.headers.get('assunto')
-
-    if subject == 'financeiro':
-        return """
-            Disponibilizamos em nosso blog, um artigo com mais detalhes e dicas de como funciona a NF-e 4.0. {|} Acesse https://blog.contaazul.com/nf-e-4-mudancas-emissao-nota-fiscal?utm_source=cami&utm_medium=acessar-o-artigo-completo e confira as novidades!
-        """
-    else:
-        return 'não encontrado'
+    print(tdd)
+    return jsonify(tdd)
 
 
 if __name__ == "__main__":
+    from environ import set_environ_variables
+    set_environ_variables()
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
-    adapter.close()
 

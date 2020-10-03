@@ -1,0 +1,31 @@
+{% extends "head.html" %}
+
+{% block body %}
+
+<div class="limiter">
+    <div class="container-table100">
+        <div class="wrap-table100">
+            <div class="table100">
+				<div style="margin-bottom: 5%;" id="index-title">
+					<h2 style="">Novo projeto</h2>
+				</div>
+				<form id="up-file-form" onsubmit="/">
+					Linhas de teste:
+					<input type="number" id="test_lines" name="test_lines" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Linhas de produção:
+					<input type="number" id="test_prod" name="test_prod" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					Valor esperado:
+					<input type="number" id="expected" name="expected" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default"><br>
+					<button id="btn-submit" type="button" onclick="call_broker_tdd()" style="border-width:3px;width: 25%;" class="btn btn-outline-info">
+                        <a id="btn-text" style="color:unset">TESTAR</a>
+						<a id="divMsg" style="width: 2%; margin-left: 1%; display:none;">
+    						<img style="width: 35px;padding-right: 0.5em;" src="{{ url_for('static', filename='images/loading.gif') }}" alt="Please wait.." />
+						</a>
+                    </button>
+				</form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

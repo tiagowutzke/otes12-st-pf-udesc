@@ -110,8 +110,9 @@ BEGIN
 				facilidade_mudanca
 			FROM caracteristicas_gerais_sistema
 			WHERE NEW.id_projeto = pontos_funcao.id_projeto
+			LIMIT 1
 		)
-		WHERE id = NEW.id;
+		WHERE id_projeto = NEW.id_projeto;
 		-- VAF
 		UPDATE pontos_funcao
 		SET vaf = ROUND(
@@ -128,7 +129,7 @@ END;
 $function$;
 
 CREATE TRIGGER calcula_gsc_vaf AFTER
-UPDATE ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_gsc_vaf();
+UPDATE or insert ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_gsc_vaf();
 
 -- Calcula os pontos de função não ajustados para atualizar o campo
 -- **ufp** da tabela pontos_funcao
@@ -171,15 +172,11 @@ BEGIN
 		pg_trigger_depth() < 2
 	THEN
 		UPDATE pontos_funcao
-		SET afp = (
-			SELECT ufp * vaf
-			FROM pontos_funcao
-			WHERE id_projeto = NEW.id_projeto
-		)
+		SET afp = ufp * vaf
 		WHERE id_projeto = NEW.id_projeto;
 		UPDATE metricas
 		SET pontos_funcao = (
-			SELECT ufp * vaf
+			SELECT afp
 			FROM pontos_funcao
 			WHERE id_projeto = NEW.id_projeto
 		)
@@ -190,8 +187,8 @@ END;
 $function$;
 
 CREATE TRIGGER a_calcula_afp AFTER
-UPDATE ON pontos_funcao_n_ajustados FOR EACH ROW EXECUTE FUNCTION calcula_afp();
+UPDATE OR INSERT ON pontos_funcao_n_ajustados FOR EACH ROW EXECUTE FUNCTION calcula_afp();
 
 CREATE TRIGGER b_calcula_afp AFTER
-UPDATE ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_afp();
+UPDATE OR INSERT ON caracteristicas_gerais_sistema FOR EACH ROW EXECUTE FUNCTION calcula_afp();
 

@@ -56,15 +56,14 @@ class Test(unittest.TestCase):
 
     # Execução dos testes unitários
 
-    def test_medidas_projeto(self):
-        self.assertEqual(
-            self.medidas_projeto(
-                real_termino='2020-08-28',
-                planejada_termino='2020-08-16',
-                real_inicio='2020-06-03'
-            ),
-            16.22  # esperado
+    def test_medidas_projeto(self, real_finish, plan_finish, real_begin, expected):
+        result = self.medidas_projeto(
+            real_termino=real_finish,
+            planejada_termino=plan_finish,
+            real_inicio=real_begin
         )
+
+        return "Passed!" if result == expected else f"Failed! {result} expected!"
 
     def test_vaf(self):
         self.assertEqual(
@@ -81,14 +80,13 @@ class Test(unittest.TestCase):
             174.02  # esperado
         )
 
-    def test_fator_teste(self):
-        self.assertEqual(
-            self.fator_teste(
-                linhas_teste=289,
-                linhas_prod=410
-            ),
-            0.7  # esperado
+    def test_fator_teste(self, linhas_teste, linhas_prod, expected):
+        result = self.fator_teste(
+            linhas_teste=linhas_teste,
+            linhas_prod=linhas_prod
         )
+        return "Passed!" if result == expected else f"Failed! {result} expected!"
+
 
     def test_casos_teste(self):
         self.assertEqual(
@@ -141,7 +139,7 @@ class Test(unittest.TestCase):
                 aceitacao_passando=20,
                 aceitacao_total=45
             ),
-            0.44  # esperado
+            0.43  # esperado
         )
 
     def test_aceitacao_falhando(self):
