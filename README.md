@@ -7,9 +7,6 @@ Desenvolver uma aplicação que apoie o processo de medição da empresa: coleta
 armazenando, analisando e relatando dados objetivos relacionados às [métricas](#métricas) e testes e assim apoiar
 os objetivos organizacionais de qualidade.
 
-## Aplicativo em produção
-Este projeto está em produção no heroku. Você pode testar o aplicativo de forma online [aqui](https://nasa-challenge-flask-example.herokuapp.com/).
-
 ## Métricas
 A seguir constam as descrições e fórmulas a respeito das métricas utilizadas para medição no projeto
 
